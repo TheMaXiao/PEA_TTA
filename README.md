@@ -1,0 +1,263 @@
+# PEA: Architecture-Agnostic Test-Time Adaptation via Backprop-Free Embedding Alignment
+
+This repository provides an **official-style reference implementation** of **Progressive Embedding Alignment (PEA)**, an **architecture-agnostic** and **backpropagation-free** test-time adaptation (TTA) method published at **ICLR 2026**.
+
+PEA revisits domain shift from an **embedding perspective** and shows that shifts induce three structured geometric changes in intermediate representations:
+- **Translation** (mean shift),
+- **Scaling** (variance shift),
+- **Rotation** (channel-wise covariance shift).
+
+Instead of updating model parameters via backpropagation, **PEA progressively aligns intermediate embeddings toward the source distribution** using **distance-aware weighted covariance alignment** with only **two forward passes** per batch.
+
+---
+
+## Method Overview (as in the paper)
+
+PEA performs **online adaptation** without gradients and without updating model parameters:
+
+### Offline stage (before deployment)
+Compute and store source statistics at each block \(l\):
+- source mean: \(\mu_{s,l}\)
+- source covariance: \(\Sigma_{s,l}\)
+
+### Online stage (test-time inference)
+For each incoming batch, PEA runs **two forward passes**:
+
+**Pass 1 — estimate layer-wise alignment weights**
+1. Extract block features \(F_l\)
+2. Compute batch mean/variance \(\mu_{b,l}, \sigma^2_{b,l}\)
+3. Compute layer discrepancy:
+\[
+d_l = \|\mu_{s,l} - \mu_{b,l}\|_2 + \|\sigma^2_{s,l} - \sigma^2_{b,l}\|_2
+\]
+4. Min-max normalize to get weights \(w_l \in [0,1]\)
+
+**Pass 2 — perform weighted feature alignment**
+1. Maintain target statistics via **EMA**:
+\[
+\mu^{(i)}_{t,l}=(1-m)\mu^{(i-1)}_{t,l}+m\mu_{b,l}, \quad
+\Sigma^{(i)}_{t,l}=(1-m)\Sigma^{(i-1)}_{t,l}+m\Sigma_{b,l}
+\]
+2. Apply WCT-style covariance alignment:
+\[
+Y_l = (F_l-\mu_{t,l})\Sigma^{-1/2}_{t,l}\Sigma^{1/2}_{s,l} + \mu_{s,l}
+\]
+3. Fuse original and aligned features:
+\[
+F'_l = (1-w_l)F_l + w_l Y_l
+\]
+
+### Robustness modules (paper defaults)
+- **Entropy spike detection**: if current batch entropy exceeds EMA-entropy by a threshold \(\theta_{ent}\), reset EMA statistics to the current batch.
+- **Lightweight augmentation** (optional): used to enrich test-time statistics and ensemble predictions.
+  - Random horizontal flip + random resized crop (scale = 0.9)
+  - \(K=2\) augmented views + original view → **3-view ensemble**
+
+---
+
+
+## Installation
+
+```bash
+conda create -n pea python=3.10 -y
+conda activate pea
+
+pip install torch torchvision timm tqdm numpy
+```
+
+
+
+
+## Quick Start
+
+### 1) ViT on CIFAR-100-C (checkpoint model)
+```bash
+python3 main_vit.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_vit_base.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_cifar100c
+```
+
+### 2) ViT on ImageNet-C (timm pretrained)
+```bash
+python3 main_vit.py --dataset imagenet_c --data /home/xiaoma/datasets/ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 20000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
+```
+
+### 3) ResNet-50 on CIFAR-100-C (checkpoint model)
+```bash
+python3 main_resnet.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_resnet50.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_cifar100c
+```
+
+### 4) ResNet-50 on ImageNet-C (timm pretrained)
+```bash
+python3 main_resnet.py --dataset imagenet_c --data /home/xiaoma/datasets/ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 10000 --eval_samples 10000 --batch_size 1 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_imagenetc
+
+```
+
+---
+
+## Outputs
+
+Each run prints:
+- per-domain accuracy (15 corruptions)
+- average accuracy across corruptions
+- CUDA peak memory usage (`torch.cuda.max_memory_allocated`)
+
+and saves a JSON summary into:
+```
+<output>/results.json
+```
+
+---
+
+## Notes on Memory/Latency Controls
+
+- `--use_augmentation` enables multi-view TTA (K augmented views + original).
+- `--microbatch_variants` controls how many views are processed per time:
+  - `1` = lowest VRAM (process views sequentially)
+  - `3` = fastest (process original + 2 aug views together), higher VRAM
+
+For the paper default \(K=2\) augmentations + original:
+- total views = 3 → `microbatch_variants=3` is the “fastest” setting if VRAM allows.
+
+
+
+## Using PEA on Other Datasets
+
+You can use PEA as a drop-in wrapper around your **pretrained model**. The key requirement is to (1) compute **source statistics** once on a clean/source loader, then (2) run **PEA inference** on incoming test batches (optionally with multi-view augmentation).
+
+Below are minimal examples for **ViT** and **ResNet**.
+
+---
+
+### A) ViT
+
+```python
+import torch
+from pea_vit import (
+    PEAStatsViT,
+    PEAViT,
+    pea_vit_infer,
+    compute_source_stats_vit,
+)
+
+device = "cuda"
+
+# 1) Prepare your pretrained ViT model (must be compatible with pea_vit.py)
+vit_model = TODO_vit_model().to(device).eval()
+
+# 2) Compute source stats ONCE using a clean/source dataloader
+#    NOTE: use_cls_only=False means "use all tokens" for stats collection (recommended).
+source_means, source_vars, source_cov_sqrts = compute_source_stats_vit(
+    vit_model,
+    source_loader=TODO_source_loader,   # clean/source loader (labels not required)
+    device=device,
+    use_cls_only=False,
+)
+
+# 3) Build PEA stats + adapter
+stats = PEAStatsViT(momentum=0.02, alpha=0.2, gamma=4.0, entropy_threshold=1.0)
+
+pea = PEAViT(
+    base_model=vit_model,
+    source_means=source_means,
+    source_vars=source_vars,
+    source_cov_sqrts=source_cov_sqrts,
+    stats=stats,
+    use_cls_only=False,     # alignment uses ALL tokens (important)
+    group_size=768,
+    update_every=1,
+).to(device).eval()
+
+# 4) Inference loop (test loader can be any dataset)
+for imgs_cpu, _ in TODO_test_loader:
+    # imgs_cpu can stay on CPU (recommended); PEA will copy efficiently to GPU.
+    logits, used_views = pea_vit_infer(
+        vit_model=vit_model,
+        pea=pea,
+        imgs_cpu=imgs_cpu,
+        device=device,
+        weight_use_cls_only=True,     # Pass-1 weighting uses CLS only (paper setting)
+        use_augmentation=True,        # multi-view test-time augmentation
+        n_aug_max=2,                  # 2 augmented views + (optional) original
+        center_crop_ratio=0.9,
+        do_hflip=True,
+        include_original=True,
+        microbatch_variants=1,        # 1 = lowest VRAM; 3 = fastest if VRAM allows
+    )
+
+    # (Optional) entropy spike reset (paper robustness module)
+    ent = float(-(torch.softmax(logits, 1) * torch.log_softmax(logits, 1)).sum(1).mean())
+    if stats.entropy_spike(ent):
+        stats = stats.reset()
+        pea.stats = stats
+        pea.reset_state()
+    stats.update_entropy(ent)
+
+    preds = logits.argmax(dim=1)
+
+```
+---
+
+### B) ResNet50
+
+```python
+import torch
+from pea_resnet import (
+    PEAStatsResNet,
+    PEAResNet,
+    pea_resnet_infer,
+    compute_source_stats_resnet,
+    entropy_from_logits,
+)
+
+device = "cuda"
+
+# 1) Prepare your pretrained ResNet model (must be compatible with pea_resnet.py)
+resnet_model = TODO_resnet_model().to(device).eval()
+
+# 2) Compute source stats ONCE using a clean/source dataloader
+source_means, source_vars, source_cov_sqrts = compute_source_stats_resnet(
+    resnet_model,
+    source_loader=TODO_source_loader,   # clean/source loader (labels not required)
+    device=device,
+    max_samples=50000,                  # or smaller for speed
+)
+
+# 3) Build PEA stats + adapter
+stats = PEAStatsResNet(momentum=0.02, alpha=0.2, gamma=2.5, entropy_threshold=0.5)
+
+pea = PEAResNet(
+    base_model=resnet_model,
+    source_means=source_means,
+    source_vars=source_vars,
+    source_cov_sqrts=source_cov_sqrts,
+    stats=stats,
+    group_size=32,
+    update_every=1,
+    ema_tile_h=8,
+    coral_tile_h=8,
+).to(device).eval()
+
+# 4) Inference loop (test loader can be any dataset)
+for imgs_cpu, _ in TODO_test_loader:
+    logits, used_views = pea_resnet_infer(
+        resnet_model=resnet_model,
+        pea=pea,
+        imgs_cpu=imgs_cpu,
+        device=device,
+        use_augmentation=True,
+        n_aug_max=2,
+        center_crop_ratio=0.9,
+        do_hflip=True,
+        include_original=True,
+        microbatch_variants=3,   # 3 = fastest if VRAM allows; 1 = lowest VRAM
+    )
+
+    # (Optional) entropy spike reset (paper robustness module)
+    ent = entropy_from_logits(logits)
+    if stats.entropy_spike(ent):
+        stats = stats.reset()
+        pea.stats = stats
+        pea.reset_state()
+    stats.update_entropy(ent)
+
+    preds = logits.argmax(dim=1)
+```

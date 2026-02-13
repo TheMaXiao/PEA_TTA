@@ -1,6 +1,6 @@
 # PEA: Architecture-Agnostic Test-Time Adaptation via Backprop-Free Embedding Alignment
 
-This repository provides an **official-style reference implementation** of **Progressive Embedding Alignment (PEA)**, an **architecture-agnostic** and **backpropagation-free** test-time adaptation (TTA) method published at **ICLR 2026**.
+This repository provides an **reference implementation** of **Progressive Embedding Alignment (PEA)**, an **architecture-agnostic** and **backpropagation-free** test-time adaptation (TTA) method published at **ICLR 2026**.
 
 PEA revisits domain shift from an **embedding perspective** and shows that shifts induce three structured geometric changes in intermediate representations:
 - **Translation** (mean shift),

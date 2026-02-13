@@ -9,51 +9,6 @@ PEA revisits domain shift from an **embedding perspective** and shows that shift
 
 Instead of updating model parameters via backpropagation, **PEA progressively aligns intermediate embeddings toward the source distribution** using **distance-aware weighted covariance alignment** with only **two forward passes** per batch.
 
----
-
-## Method Overview (as in the paper)
-
-PEA performs **online adaptation** without gradients and without updating model parameters:
-
-### Offline stage (before deployment)
-Compute and store source statistics at each block \(l\):
-- source mean: \(\mu_{s,l}\)
-- source covariance: \(\Sigma_{s,l}\)
-
-### Online stage (test-time inference)
-For each incoming batch, PEA runs **two forward passes**:
-
-**Pass 1 — estimate layer-wise alignment weights**
-1. Extract block features \(F_l\)
-2. Compute batch mean/variance \(\mu_{b,l}, \sigma^2_{b,l}\)
-3. Compute layer discrepancy:
-\[
-d_l = \|\mu_{s,l} - \mu_{b,l}\|_2 + \|\sigma^2_{s,l} - \sigma^2_{b,l}\|_2
-\]
-4. Min-max normalize to get weights \(w_l \in [0,1]\)
-
-**Pass 2 — perform weighted feature alignment**
-1. Maintain target statistics via **EMA**:
-\[
-\mu^{(i)}_{t,l}=(1-m)\mu^{(i-1)}_{t,l}+m\mu_{b,l}, \quad
-\Sigma^{(i)}_{t,l}=(1-m)\Sigma^{(i-1)}_{t,l}+m\Sigma_{b,l}
-\]
-2. Apply WCT-style covariance alignment:
-\[
-Y_l = (F_l-\mu_{t,l})\Sigma^{-1/2}_{t,l}\Sigma^{1/2}_{s,l} + \mu_{s,l}
-\]
-3. Fuse original and aligned features:
-\[
-F'_l = (1-w_l)F_l + w_l Y_l
-\]
-
-### Robustness modules (paper defaults)
-- **Entropy spike detection**: if current batch entropy exceeds EMA-entropy by a threshold \(\theta_{ent}\), reset EMA statistics to the current batch.
-- **Lightweight augmentation** (optional): used to enrich test-time statistics and ensemble predictions.
-  - Random horizontal flip + random resized crop (scale = 0.9)
-  - \(K=2\) augmented views + original view → **3-view ensemble**
-
----
 
 
 ## Installation
@@ -77,7 +32,7 @@ python3 main_vit.py --dataset cifar100_c --data ./datasets --data_corruption ./d
 
 ### 2) ViT on ImageNet-C (timm pretrained)
 ```bash
-python3 main_vit.py --dataset imagenet_c --data /home/xiaoma/datasets/ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 20000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
+python3 main_vit.py --dataset imagenet_c --data /home/xiaoma/datasets/ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
 ```
 
 ### 3) ResNet-50 on CIFAR-100-C (checkpoint model)

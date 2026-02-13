@@ -32,7 +32,7 @@ python3 main_vit.py --dataset cifar100_c --data ./datasets --data_corruption ./d
 
 ### 2) ViT on ImageNet-C (timm pretrained)
 ```bash
-python3 main_vit.py --dataset imagenet_c --data /home/xiaoma/datasets/ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
+python3 main_vit.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
 ```
 
 ### 3) ResNet-50 on CIFAR-100-C (checkpoint model)
@@ -42,7 +42,7 @@ python3 main_resnet.py --dataset cifar100_c --data ./datasets --data_corruption 
 
 ### 4) ResNet-50 on ImageNet-C (timm pretrained)
 ```bash
-python3 main_resnet.py --dataset imagenet_c --data /path/to/ImageNet ImageNet --data_corruption /home/xiaoma/datasets/ImageNet-C --exp_type continual --source_stats_samples 10000 --eval_samples 10000 --batch_size 1 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_imagenetc
+python3 main_resnet.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 10000 --eval_samples 10000 --batch_size 1 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_imagenetc
 ```
 
 ---

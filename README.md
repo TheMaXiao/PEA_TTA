@@ -37,8 +37,8 @@ Due to file size limitations, the pre-trained model checkpoints are not included
 
 **Setup:**
 ```bash
-# Create checkpoint directory
-mkdir -p ckpt/
+# Create checkpoint and output directories
+mkdir -p ckpt/ outputs/
 
 # Download ResNet-50 checkpoint (95MB)
 wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1FcF_YWg9ceDDwfsQYz174MzdngzHBdsB' -O ./ckpt/cifar100_resnet50.pth
@@ -64,6 +64,8 @@ mkdir -p datasets/
 cd datasets/
 wget -c --content-disposition "https://zenodo.org/records/3555552/files/CIFAR-100-C.tar?download=1"
 tar -xf CIFAR-100-C.tar
+cd ..
+
 ```
 
 **Expected structure:**
@@ -73,23 +75,9 @@ datasets/
     ├── brightness.npy
     ├── contrast.npy
     ├── defocus_blur.npy
-    ├── elastic_transform.npy
-    ├── fog.npy
-    ├── frost.npy
-    ├── gaussian_blur.npy
-    ├── gaussian_noise.npy
-    ├── glass_blur.npy
-    ├── impulse_noise.npy
-    ├── jpeg_compression.npy
+    ├── ...
     ├── labels.npy
-    ├── motion_blur.npy
-    ├── pixelate.npy
-    ├── saturate.npy
-    ├── shot_noise.npy
-    ├── snow.npy
-    ├── spatter.npy
-    ├── speckle_noise.npy
-    └── zoom_blur.npy
+    └── (15 corruption types + labels)
 ```
 
 > **Note:** The original CIFAR-100 clean dataset will be automatically downloaded when running the scripts.

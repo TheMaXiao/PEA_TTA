@@ -22,18 +22,23 @@ pip install torch torchvision timm tqdm numpy
 
 ## Model Checkpoints
 
-Due to file size limitations, the pre-trained model checkpoints are not included in this repository. Please download them from the following link and place them in the `ckpt/` directory:
+Due to file size limitations, the pre-trained model checkpoints are not included in this repository. Please download them from Google Drive and place them in the `ckpt/` directory:
 
 **Download Links:**
-- `cifar100_resnet50.pth` (~95MB)  
-- `cifar100_vit_base.pth` (~344MB)
+- **ResNet-50 CIFAR-100 checkpoint** (`cifar100_resnet50.pth`, ~95MB):  
+  [Download from Google Drive](https://drive.google.com/file/d/YOUR_RESNET_FILE_ID/view?usp=sharing)
+  
+- **ViT-Base CIFAR-100 checkpoint** (`cifar100_vit_base.pth`, ~344MB):  
+  [Download from Google Drive](https://drive.google.com/file/d/YOUR_VIT_FILE_ID/view?usp=sharing)
 
 **Setup:**
 ```bash
 mkdir -p ckpt/
 # Download the checkpoint files to the ckpt/ directory
-# Or train your own models using the provided scripts
+# Make sure the filenames match: cifar100_resnet50.pth and cifar100_vit_base.pth
 ```
+
+> **Note:** Replace `YOUR_RESNET_FILE_ID` and `YOUR_VIT_FILE_ID` with the actual Google Drive file IDs after uploading the checkpoint files.
 
 ## Quick Start
 

@@ -40,6 +40,54 @@ mkdir -p ckpt/
 
 > **Note:** Replace `YOUR_RESNET_FILE_ID` and `YOUR_VIT_FILE_ID` with the actual Google Drive file IDs after uploading the checkpoint files.
 
+## Datasets
+
+### CIFAR-100-C Dataset
+
+The CIFAR-100-C dataset contains corrupted versions of CIFAR-100 test images with 15 different corruption types (e.g., noise, blur, weather effects). Download it to the `datasets/` directory:
+
+**Download Steps:**
+1. Visit the [robustness repository](https://github.com/hendrycks/robustness?tab=readme-ov-file)
+2. Download the CIFAR-100-C dataset files 
+3. Extract to `datasets/CIFAR-100-C/`
+
+**Alternative direct download:**
+```bash
+mkdir -p datasets/
+cd datasets/
+# Download CIFAR-100-C (replace with actual download link from the robustness repo)
+wget https://zenodo.org/record/2535967/files/CIFAR-100-C.tar
+tar -xf CIFAR-100-C.tar
+```
+
+**Expected structure:**
+```
+datasets/
+└── CIFAR-100-C/
+    ├── brightness.npy
+    ├── contrast.npy
+    ├── defocus_blur.npy
+    ├── elastic_transform.npy
+    ├── fog.npy
+    ├── frost.npy
+    ├── gaussian_blur.npy
+    ├── gaussian_noise.npy
+    ├── glass_blur.npy
+    ├── impulse_noise.npy
+    ├── jpeg_compression.npy
+    ├── labels.npy
+    ├── motion_blur.npy
+    ├── pixelate.npy
+    ├── saturate.npy
+    ├── shot_noise.npy
+    ├── snow.npy
+    ├── spatter.npy
+    ├── speckle_noise.npy
+    └── zoom_blur.npy
+```
+
+> **Note:** The original CIFAR-100 clean dataset will be automatically downloaded when running the scripts.
+
 ## Quick Start
 
 ### 1) ViT on CIFAR-100-C (checkpoint model)

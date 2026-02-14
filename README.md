@@ -26,10 +26,10 @@ Due to file size limitations, the pre-trained model checkpoints are not included
 
 **Download Links:**
 - **ResNet-50 CIFAR-100 checkpoint** (`cifar100_resnet50.pth`, ~95MB):  
-  [Download from Google Drive](https://drive.google.com/file/d/YOUR_RESNET_FILE_ID/view?usp=sharing)
+  [Download from Google Drive](https://drive.google.com/file/d/1FcF_YWg9ceDDwfsQYz174MzdngzHBdsB/view?usp=sharing)
   
 - **ViT-Base CIFAR-100 checkpoint** (`cifar100_vit_base.pth`, ~344MB):  
-  [Download from Google Drive](https://drive.google.com/file/d/YOUR_VIT_FILE_ID/view?usp=sharing)
+  [Download from Google Drive](https://drive.google.com/file/d/1CTCUL5ZpoKC16MuaFhW9rgGH2CAY5xYf/view?usp=sharing)
 
 **Setup:**
 ```bash

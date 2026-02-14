@@ -55,8 +55,7 @@ The CIFAR-100-C dataset contains corrupted versions of CIFAR-100 test images wit
 ```bash
 mkdir -p datasets/
 cd datasets/
-# Download CIFAR-100-C (replace with actual download link from the robustness repo)
-wget https://zenodo.org/record/2535967/files/CIFAR-100-C.tar
+wget -c --content-disposition "https://zenodo.org/records/3555552/files/CIFAR-100-C.tar?download=1"
 tar -xf CIFAR-100-C.tar
 ```
 

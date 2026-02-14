@@ -37,12 +37,15 @@ Due to file size limitations, the pre-trained model checkpoints are not included
 
 **Setup:**
 ```bash
+# Create checkpoint directory
 mkdir -p ckpt/
-# Download the checkpoint files to the ckpt/ directory
-# Make sure the filenames match: cifar100_resnet50.pth and cifar100_vit_base.pth
-```
 
-> **Note:** Replace `YOUR_RESNET_FILE_ID` and `YOUR_VIT_FILE_ID` with the actual Google Drive file IDs after uploading the checkpoint files.
+# Download ResNet-50 checkpoint (95MB)
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1FcF_YWg9ceDDwfsQYz174MzdngzHBdsB' -O ./ckpt/cifar100_resnet50.pth
+
+# Download ViT-Base checkpoint (344MB)
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1CTCUL5ZpoKC16MuaFhW9rgGH2CAY5xYf' -O ./ckpt/cifar100_vit_base.pth
+```
 
 ## Datasets
 

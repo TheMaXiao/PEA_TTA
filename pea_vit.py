@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
-
+from tqdm import tqdm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -84,7 +84,7 @@ def compute_source_stats_vit(
     source_cov_sqrts: Dict[str, torch.Tensor] = {}
 
     num_blocks = len(model.blocks)
-    for idx in range(num_blocks):
+    for idx in tqdm(range(num_blocks), desc="Computing source stats"):
         running_mean = None
         running_m2 = None
         running_c2 = None

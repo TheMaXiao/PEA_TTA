@@ -280,10 +280,6 @@ def save_outputs(out_dir: Path, args, results: Dict[str, float], peak_mem_mb: fl
 def main():
     args = parse_args()
 
-    # torch.backends.cuda.matmul.allow_tf32 = True
-    # torch.backends.cudnn.allow_tf32 = True
-    # torch.set_float32_matmul_precision("high")
-
     set_seed(args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -305,6 +301,7 @@ def main():
     if max_samples is None:
         max_samples = int(args.source_stats_samples)
 
+    print("Offline Stage: Computing source stats...")
     source_means, source_vars, source_cov_sqrts = compute_source_stats_resnet(
         model, src_loader, device, max_samples=max_samples
     )
@@ -317,6 +314,7 @@ def main():
         entropy_threshold=float(args.entropy_threshold),
     )
 
+    print("Online Stage: Running PEA...")
     pea = PEAResNet(
         base_model=model.eval().to(device),
         source_means=source_means,

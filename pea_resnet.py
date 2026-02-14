@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
-
+from tqdm import tqdm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -81,7 +81,7 @@ def compute_source_stats_resnet(
     source_vars: Dict[Tuple[str, int], torch.Tensor] = {}
     source_cov_sqrts: Dict[Tuple[str, int], torch.Tensor] = {}
 
-    for layer in layers:
+    for layer in tqdm(layers, desc="Computing source stats"):
         seq = getattr(model, layer)
         for idx in range(len(seq)):
             run_sum = None

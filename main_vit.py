@@ -310,6 +310,7 @@ def main():
         eval_loaders = make_eval_loaders_imagenetc(args)
 
     # Offline stats: ALL tokens
+    print("Offline Stage: Computing source stats...")
     source_means, source_vars, source_cov_sqrts = compute_source_stats_vit(
         vit_model, src_loader, device, use_cls_only=False
     )
@@ -322,6 +323,7 @@ def main():
     )
 
     # Alignment: ALWAYS all tokens
+    print("Online Stage: Running PEA...")
     pea = PEAViT(
         base_model=vit_model.eval().to(device),
         source_means=source_means,

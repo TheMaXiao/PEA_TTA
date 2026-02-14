@@ -171,7 +171,7 @@ source_means, source_vars, source_cov_sqrts = compute_source_stats_vit(
 )
 
 # 3) Build PEA stats + adapter
-stats = PEAStatsViT(momentum=0.02, alpha=0.2, gamma=4.0, entropy_threshold=1.0)
+stats = PEAStatsViT(momentum=0.02, entropy_threshold=1.0) # user define, for challenging datasets, set entropy_threshold to larger numbers. 
 
 pea = PEAViT(
     base_model=vit_model,
@@ -195,9 +195,6 @@ for imgs_cpu, _ in TODO_test_loader:
         weight_use_cls_only=True,     # Pass-1 weighting uses CLS only (paper setting)
         use_augmentation=True,        # multi-view test-time augmentation
         n_aug_max=2,                  # 2 augmented views + (optional) original
-        center_crop_ratio=0.9,
-        do_hflip=True,
-        include_original=True,
         microbatch_variants=1,        # 1 = lowest VRAM; 3 = fastest if VRAM allows
     )
 
@@ -240,7 +237,7 @@ source_means, source_vars, source_cov_sqrts = compute_source_stats_resnet(
 )
 
 # 3) Build PEA stats + adapter
-stats = PEAStatsResNet(momentum=0.02, alpha=0.2, gamma=2.5, entropy_threshold=0.5)
+stats = PEAStatsResNet(momentum=0.02,  entropy_threshold=1.0) # user define, for challenging datasets, set entropy_threshold to larger numbers. 
 
 pea = PEAResNet(
     base_model=resnet_model,
@@ -248,10 +245,8 @@ pea = PEAResNet(
     source_vars=source_vars,
     source_cov_sqrts=source_cov_sqrts,
     stats=stats,
-    group_size=32,
+    group_size=32, # chunck the resnet to several groups to save computation. 
     update_every=1,
-    ema_tile_h=8,
-    coral_tile_h=8,
 ).to(device).eval()
 
 # 4) Inference loop (test loader can be any dataset)
@@ -263,9 +258,6 @@ for imgs_cpu, _ in TODO_test_loader:
         device=device,
         use_augmentation=True,
         n_aug_max=2,
-        center_crop_ratio=0.9,
-        do_hflip=True,
-        include_original=True,
         microbatch_variants=3,   # 3 = fastest if VRAM allows; 1 = lowest VRAM
     )
 

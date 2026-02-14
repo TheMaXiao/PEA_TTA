@@ -92,22 +92,22 @@ datasets/
 
 ### 1) ViT on CIFAR-100-C (checkpoint model)
 ```bash
-python3 main_vit.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_vit_base.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_cifar100c
+python main_vit.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_vit_base.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_cifar100c
 ```
 
 ### 2) ViT on ImageNet-C (timm pretrained)
 ```bash
-python3 main_vit.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
+python main_vit.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 1 --output ./outputs/pea_vit_imagenetc
 ```
 
 ### 3) ResNet-50 on CIFAR-100-C (checkpoint model)
 ```bash
-python3 main_resnet.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_resnet50.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_cifar100c
+python main_resnet.py --dataset cifar100_c --data ./datasets --data_corruption ./datasets/CIFAR-100-C --ckpt ./ckpt/cifar100_resnet50.pth --exp_type continual --source_stats_samples 50000 --batch_size 64 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_cifar100c
 ```
 
 ### 4) ResNet-50 on ImageNet-C (timm pretrained)
 ```bash
-python3 main_resnet.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 10000 --eval_samples 10000 --batch_size 1 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_imagenetc
+python main_resnet.py --dataset imagenet_c --data /path/to/ImageNet --data_corruption /path/to/ImageNet-C --exp_type continual --source_stats_samples 50000 --eval_samples 50000 --batch_size 1 --use_augmentation --n_aug_max 2 --microbatch_variants 3 --output ./outputs/pea_resnet_imagenetc
 ```
 
 ---

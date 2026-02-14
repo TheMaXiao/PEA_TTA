@@ -149,7 +149,7 @@ Below are minimal examples for **ViT** and **ResNet**.
 
 ---
 
-### A) ViT
+### A) ViT Models
 
 ```python
 import torch
@@ -184,7 +184,7 @@ pea = PEAViT(
     source_cov_sqrts=source_cov_sqrts,
     stats=stats,
     use_cls_only=False,     # alignment uses ALL tokens (important)
-    group_size=768,
+    group_size=768,         # ViT-base has 768 channels, while ViT-tiny has 192. 
     update_every=1,
 ).to(device).eval()
 

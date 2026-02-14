@@ -20,8 +20,20 @@ conda activate pea
 pip install torch torchvision timm tqdm numpy
 ```
 
+## Model Checkpoints
 
+Due to file size limitations, the pre-trained model checkpoints are not included in this repository. Please download them from the following link and place them in the `ckpt/` directory:
 
+**Download Links:**
+- `cifar100_resnet50.pth` (~95MB)  
+- `cifar100_vit_base.pth` (~344MB)
+
+**Setup:**
+```bash
+mkdir -p ckpt/
+# Download the checkpoint files to the ckpt/ directory
+# Or train your own models using the provided scripts
+```
 
 ## Quick Start
 

@@ -17,7 +17,7 @@ Instead of updating model parameters via backpropagation, **PEA progressively al
 conda create -n pea python=3.10 -y
 conda activate pea
 
-pip install torch torchvision timm tqdm numpy
+pip install torch==2.7.0 torchvision==0.22.0 timm==1.0.15 tqdm==4.67.1 numpy==2.2.6
 ```
 
 ## Model Checkpoints

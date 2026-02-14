@@ -40,11 +40,11 @@ Due to file size limitations, the pre-trained model checkpoints are not included
 # Create checkpoint and output directories
 mkdir -p ckpt/ outputs/
 
-# Download ResNet-50 checkpoint (95MB)
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1FcF_YWg9ceDDwfsQYz174MzdngzHBdsB' -O ./ckpt/cifar100_resnet50.pth
+# ResNet50 model (91MB)
+wget --no-check-certificate 'https://drive.usercontent.google.com/download?id=1FcF_YWg9ceDDwfsQYz174MzdngzHBdsB&export=download&confirm=t' -O ./ckpt/cifar100_resnet50.pth
 
-# Download ViT-Base checkpoint (344MB)
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1CTCUL5ZpoKC16MuaFhW9rgGH2CAY5xYf' -O ./ckpt/cifar100_vit_base.pth
+# ViT model (328MB)
+wget --no-check-certificate 'https://drive.usercontent.google.com/download?id=1CTCUL5ZpoKC16MuaFhW9rgGH2CAY5xYf&export=download&confirm=t' -O ./ckpt/cifar100_vit_base.pth
 ```
 
 ## Datasets

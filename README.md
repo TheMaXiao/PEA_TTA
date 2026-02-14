@@ -275,3 +275,28 @@ for imgs_cpu, _ in TODO_test_loader:
 
     preds = logits.argmax(dim=1)
 ```
+
+---
+
+## About This Repository
+
+This is the original implementation of Progressive Embedding Alignment (PEA). We are continuously polishing and improving the codebase to make it more robust and user-friendly. 
+
+## Citation
+
+If you find this work useful in your research, please cite our paper:
+
+```bibtex
+@inproceedings{
+xiao2026architectureagnostic,
+title={Architecture-Agnostic Test-Time Adaptation via Backprop-Free Embedding Alignment},
+author={MA Xiao and Young D. Kwon and Pan Zhou and Dong Ma},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=7kLNGaAHaw}
+}
+``` 
+
+
+
+

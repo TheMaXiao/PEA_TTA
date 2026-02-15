@@ -5,13 +5,7 @@ from PIL import Image
 import torchvision
 import os
 import numpy as np
-train_transform = transforms.Compose([
-    transforms.Resize(224),
-    transforms.RandomCrop(224),
-    transforms.RandomHorizontalFlip(),
-    transforms.ToTensor(),
-    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-])
+
 standard_transform = transforms.Compose([
     transforms.Resize([224,224]),
     transforms.ToTensor(),
@@ -26,18 +20,10 @@ standard_transform_vit = transforms.Compose([
     normalize
 ])
 
-train_transform_vit = transforms.Compose([
-    transforms.Resize(224),
-    transforms.RandomCrop(224),
-    transforms.RandomHorizontalFlip(),
-    transforms.ToTensor(),
-    normalize
-    # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-])
 
 
-domains_info = ['snow', 'fog', 'frost', 'brightness', 'impulse_noise', 'gaussian_noise', 'shot_noise', 'zoom_blur','contrast', 'defocus_blur','elastic_transform', 'gaussian_blur', 'jpeg_compression','motion_blur','pixelate'
-                , 'saturate', 'spatter', 'speckle_noise','glass_blur', 'near_focus', 'far_focus' ,'fog_3d' ,'flash' ,'color_quant', 'low_light']
+# domains_info = ['snow', 'fog', 'frost', 'brightness', 'impulse_noise', 'gaussian_noise', 'shot_noise', 'zoom_blur','contrast', 'defocus_blur','elastic_transform', 'gaussian_blur', 'jpeg_compression','motion_blur','pixelate'
+#                 , 'saturate', 'spatter', 'speckle_noise','glass_blur', 'near_focus', 'far_focus' ,'fog_3d' ,'flash' ,'color_quant', 'low_light']
 
 
 class CIFAR10C(datasets.VisionDataset):
@@ -72,7 +58,7 @@ class CIFAR10C(datasets.VisionDataset):
         return len(self.data)
 
 def IMAGENETC(root :str, name :str, severity :int, transform=None):
-    assert name in domains_info
+    # assert name in domains_info
     data_path = os.path.join(root, name, str(severity))
     dataset = torchvision.datasets.ImageFolder(root=data_path, transform=transform)
     return dataset

@@ -19,6 +19,7 @@ def set_seed(seed = 0):
 
 def softmax_entropy(x: torch.Tensor) -> torch.Tensor:
     """Entropy of softmax distribution from logits."""
+    
     temprature = 1
     x = x/ temprature
     x = -(x.softmax(1) * x.log_softmax(1)).sum(1)

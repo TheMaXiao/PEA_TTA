@@ -14,6 +14,7 @@ standard_transform = transforms.Compose([
 
 
 normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+
 standard_transform_vit = transforms.Compose([
     transforms.Resize([224,224]),
     transforms.ToTensor(),

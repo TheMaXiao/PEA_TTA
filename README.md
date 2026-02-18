@@ -8,7 +8,7 @@ PEA revisits domain shift from an **embedding perspective** and shows that shift
 - **Rotation** (channel-wise covariance shift).
 
 <div align="center">
-<img src="Figure.png" alt="PEA Overview: Three Geometric Changes in Embeddings" width="800"/>
+<img src="figure.png" alt="PEA Overview: Three Geometric Changes in Embeddings" width="800"/>
 </div>
 
 Instead of updating model parameters via backpropagation, **PEA progressively aligns intermediate embeddings toward the source distribution** using **distance-aware weighted covariance alignment** with only **two forward passes** per batch.

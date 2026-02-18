@@ -237,6 +237,7 @@ def make_eval_loaders_imagenetc(args) -> List[Tuple[str, DataLoader]]:
     # Use one corruption as the reference for dataset length + index sampling.
     # This works if ALL corruptions share the same sample ordering (standard ImageNet-C setup).
     ref_corr = args.corruptions[0]
+    
     ref_ds_full = IMAGENETC(args.data_corruption, ref_corr, args.severity, standard_transform_vit)
 
     n_total = len(ref_ds_full)

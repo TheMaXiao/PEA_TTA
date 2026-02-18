@@ -157,6 +157,7 @@ def _build_source_cov_groups_vit(
     Build grouped Σ_src^{1/2} blocks from full Σ_src^{1/2}.
     Stored as a list of [g,g] matrices for each key.
     """
+    
     groups: Dict[str, List[torch.Tensor]] = {}
     for key, cov_sqrt in source_cov_sqrts.items():
         cov = cov_sqrt.float() @ cov_sqrt.float().T

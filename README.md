@@ -271,7 +271,7 @@ for imgs_cpu, _ in TODO_test_loader:
 
 ## About This Repository
 
-This is the original implementation of Progressive Embedding Alignment (PEA). We are continuously polishing and improving the codebase to make it more robust and user-friendly. 
+This is the original implementation of Progressive Embedding Alignment (PEA). We are continuously polishing and improving the codebase to make it more user-friendly. 
 
 ## Citation
 

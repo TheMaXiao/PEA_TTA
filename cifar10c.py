@@ -10,8 +10,6 @@ from torchvision import datasets
 
 import random
 
-
-
 def load_txt(path :str) -> list:
     return [line.rstrip('\n') for line in open(path)]
 

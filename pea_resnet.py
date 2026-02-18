@@ -359,6 +359,7 @@ class PEAResNet(nn.Module):
             tmp1 = torch.empty((max_N, g), device=device, dtype=feat.dtype)
             tmp2 = torch.empty((max_N, g), device=device, dtype=feat.dtype)
 
+
             for h0 in range(0, H, th):
                 h1 = min(h0 + th, H)
                 for w0 in range(0, W, tw):

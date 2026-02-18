@@ -196,7 +196,6 @@ def make_source_loader_cifar(args) -> DataLoader:
 def make_source_loader_imagenet(args) -> DataLoader:
     # matches your script: torchvision.datasets.ImageNet(..., split='train')
     train_set = torchvision.datasets.ImageNet(root=args.data, split="train", transform=standard_transform)
-
     n_total = len(train_set)
     n = min(int(args.source_stats_samples), n_total)
     g = torch.Generator().manual_seed(args.seed)
